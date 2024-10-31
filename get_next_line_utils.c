@@ -6,7 +6,7 @@
 /*   By: annmakar <annmakar@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 18:09:21 by annmakar          #+#    #+#             */
-/*   Updated: 2024/10/31 13:18:01 by annmakar         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:01:11 by annmakar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3[i] = '\0';
 	return (s3);
 }
+
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*p;
@@ -53,3 +54,18 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (p);
 }
 
+char	*ft_strchr(const char *s, int c)
+{
+	unsigned char	target;
+	char			*sn;
+
+	target = (unsigned char)c;
+	sn = (char *)s;
+	while (*sn != target)
+	{
+		if (*sn == '\0')
+			return (NULL);
+		sn++;
+	}
+	return (sn);
+}
