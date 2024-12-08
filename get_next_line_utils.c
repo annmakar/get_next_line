@@ -6,11 +6,39 @@
 /*   By: annmakar <annmakar@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 18:09:21 by annmakar          #+#    #+#             */
-/*   Updated: 2024/10/31 16:01:11 by annmakar         ###   ########.fr       */
+/*   Updated: 2024/11/30 19:19:56 by annmakar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	*ft_bzero(void *s, size_t n)
+{
+	unsigned char	*str;
+	size_t			i;
+
+	i = 0;
+	str = (unsigned char *)s;
+	while (n > i)
+	{
+		str[i] = 0;
+		i++;
+	}
+	return (s);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	count;
+
+	count = 0;
+	while (*str != '\0')
+	{
+		count++;
+		str++;
+	}
+	return (count);
+}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -20,8 +48,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	g = 0;
-	s3 = (char *)malloc((sizeof(*s1) * ft_strlen(s1)) \
-	+ (sizeof(*s2) * ft_strlen(s2)) + 1);
+	if (!s1 || !s2)
+		return (NULL);
+	s3 = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (s3 == NULL)
 		return (NULL);
 	while (s1[i] != '\0')
@@ -49,8 +78,8 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	p = malloc(nmemb * size);
 	if (p == NULL)
-		return (p);
-	ft_bzero(p, (nmemb * size));
+		return (NULL);
+	ft_bzero(p, nmemb * size);
 	return (p);
 }
 

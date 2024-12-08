@@ -6,7 +6,7 @@
 /*   By: annmakar <annmakar@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 18:01:19 by annmakar          #+#    #+#             */
-/*   Updated: 2024/10/31 16:04:27 by annmakar         ###   ########.fr       */
+/*   Updated: 2024/12/08 02:12:19 by annmakar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_free(char *buffer, char *buf)
 	char	*temp;
 
 	temp = ft_strjoin(buffer, buf);
+	if (!temp)
+		return (buffer);
 	free(buffer);
 	return (temp);
 }
@@ -28,6 +30,7 @@ char	*ft_next(char *buffer)
 	char	*l;
 
 	i = 0;
+	j = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (!buffer[i])
@@ -36,10 +39,15 @@ char	*ft_next(char *buffer)
 		return (NULL);
 	}
 	l = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	if (!l)
+	{
+		free(buffer);
+		return (NULL);
+	}
 	i++;
-	j = 0;
 	while (buffer[i])
 		l[j++] = buffer[i++];
+	l[j] = '\0';
 	free(buffer);
 	return (l);
 }
@@ -50,11 +58,14 @@ char	*ft_line(char *buffer)
 	int		i;
 
 	i = 0;
-	if (!buffer[i])
-		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	l = ft_calloc(i + 2, sizeof(char));
+	if (buffer[i] == '\n')
+		i++;
+	l = ft_calloc(i + 1, sizeof(char));
+	if (!l)
+		return (NULL);
+	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
 		l[i] = buffer[i];
@@ -75,19 +86,20 @@ char	*read_file(int fd, char *res)
 		res = ft_calloc(1, 1);
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
-		return (NULL);
+		return (free(res), NULL);
 	br = 1;
 	while (br > 0)
 	{
 		br = read(fd, buffer, BUFFER_SIZE);
 		if (br == -1)
 		{
-			free (buffer);
+			free(buffer);
+			free(res);
 			return (NULL);
 		}
-		buffer[br] = 0;
+		buffer[br] = '\0';
 		res = ft_free(res, buffer);
-		if (ft_strchr(buffer, '\n'))
+		if (br == 0 || ft_strchr(buffer, '\n'))
 			break ;
 	}
 	free(buffer);
@@ -99,12 +111,50 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*l;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
 	buffer = read_file(fd, buffer);
 	if (!buffer)
 		return (NULL);
 	l = ft_line(buffer);
+	if (!l)
+	{
+		free(buffer);
+		buffer = NULL;
+		return (NULL);
+	}
 	buffer = ft_next(buffer);
+	if (!l[0])
+	{
+		free(l);
+		l = NULL;
+	}
 	return (l);
 }
+
+// #include <fcntl.h>
+// #include <stdio.h>
+
+// int	main()
+// {
+// 	int	fd = open("a.txt", O_RDONLY);
+// 	printf("Line: %d\n", fd);
+// 	char *line;
+
+// 	if (fd < 0)
+// 	{
+// 		printf("error");
+// 		return (1);
+// 	}
+
+// 	line = get_next_line(fd);
+// 	printf("Line: %s\n", line);
+// 	while (line != NULL)
+// 	{
+// 		printf("Line: %s", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }

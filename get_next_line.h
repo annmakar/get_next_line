@@ -6,7 +6,7 @@
 /*   By: annmakar <annmakar@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 18:06:14 by annmakar          #+#    #+#             */
-/*   Updated: 2024/10/31 16:09:10 by annmakar         ###   ########.fr       */
+/*   Updated: 2024/12/08 02:12:41 by annmakar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ char	*get_next_line(int fd);
 char	*ft_next(char *buffer);
 char	*ft_free(char *buffer, char *buf);
 void	*ft_calloc(size_t nmemb, size_t size);
-char	*read_b(int fd, char *res);
+char	*read_file(int fd, char *res);
+void	*ft_bzero(void *s, size_t n);
+size_t	ft_strlen(const char *str);
+char	*ft_strchr(const char *s, int c);
 
 #endif
